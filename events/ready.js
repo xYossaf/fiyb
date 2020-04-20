@@ -22,9 +22,8 @@ module.exports = async client => {
 function checkServers(client,db,dbName) {
 	client.guilds.cache.forEach(guild => {
         console.log(db.get(guild.id));
-		if(!db.has(guild.id) || db.get(guild.id) == null) {
-	
-		db.set(guild.id,{a:false});
+		if(!db.has(guild.id) || db.get(guild.id) == null) { 
+		db.set(guild.id,{a:false,sud:false});
 	
         }
 		});

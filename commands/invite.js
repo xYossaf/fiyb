@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { embedColor, discord, invite } = require('../config');
 const { noBotPerms } = require('../utils/errors');
 
@@ -8,7 +8,7 @@ exports.run = async (client, message, args) => {
     if (!perms.has('ADD_REACTIONS')) return noBotPerms(message, 'ADD_REACTIONS');
     if (!perms.has('MANAGE_MESSAGES')) return noBotPerms(message, 'MANAGE_MESSAGES');
 
-    const inviteEmbed = new RichEmbed()
+    const inviteEmbed = new MessageEmbed()
         .setAuthor('Bot Invite Information', client.user.avatarURL)
         .setDescription('Bot Invite Information', client.user.avatarURL)
         .setDescription(`Hello ${message.author},

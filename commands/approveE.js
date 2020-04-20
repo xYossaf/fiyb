@@ -6,7 +6,9 @@ exports.run = async (client, message, args) => {
     if (!author.hasPermission('ADMINISTRATOR')) return message.channel.send("but you don't have enough permission(s) to run this command | Missing permission(s): `ADMINISTRATOR`");
     if (!args[0]) return message.channel.send("but you didn't mention or type ID of User who will become approved");
      var user = await GetUser(client,message, args);
-
+     if(user) {
+      if(user.bot||user.user.bot) return message.channel.send("sorry but you can't approve a bot");
+    }
      if (args[0].length == 18 && !isNaN(args[0]) && user == undefined) {
       
         let areYouSure = new MessageEmbed()
@@ -55,8 +57,7 @@ exports.run = async (client, message, args) => {
     } else if (user !== undefined) {
 
       if (user.id == message.author.id) return message.channel.send("sorry but you can't approve yourself :(");
-  
-      AddUser(client,message,user.id,user);
+      AddUser(client,message,user.id||user.user.id,user);
 
     }
 
@@ -66,15 +67,14 @@ exports.run = async (client, message, args) => {
 };
 
 exports.help = {
-    name: 'approvee',
+    name: 'approve',
     aliases: [],
     description: 'View the latency of the bot and API.',
-    usage: 'approveE'
+    usage: 'approve <ID | MENTION>'
 };
 
 
 async function GetUser(client,message, args) {
-       console.log("1");
     let User = await message.guild.member(message.mentions.users.first());
     if (User) return User;
 
@@ -95,16 +95,11 @@ async function AddUser (client,message,IDU,user) {
     var db;
     let stb = false;
      db = await client.appdata.get(message.guild.id);
-     console.log("2");
-     console.log(db);
+    // console.log(db);
     if(db.a == false) { stb = true;}
-    console.log(`bbb ${stb}`);
-
-     let temps = stb == false ?  db[`${IDU}`].ID == IDU : false;
-     console.log(`aaa ${temps}`);
+     let temps = stb == false ?  db[`${IDU}`] !== undefined ? db[`${IDU}`].ID == IDU:false : false;
      if (temps) { message.channel.send(`sorry but **${IDU}** is already in my list`);
      } else { 
-        console.log("3");
 
    let date_ob = new Date();
    let date = ("0" + date_ob.getDate()).slice(-2);
@@ -112,6 +107,10 @@ async function AddUser (client,message,IDU,user) {
    let year = date_ob.getFullYear();
    await client.appdata.set(message.guild.id,true,`a`);
    await client.appdata.set(message.guild.id,{ID: IDU, addedBy: message.author.id, approvedOn: year + "-" + month + "-" + date},IDU);
+   if(message.guild.member(IDU)) {
+     var rolea = message.guild.roles.cache.get(db.RoleID);
+    await message.guild.member(IDU).roles.add(rolea);
+   }
    let channeledunvaildID = new MessageEmbed()
    .setDescription(`${user !== undefined ? `successfully added ${user.user.username}(**${IDU}**) to the list`:`successfully added **${IDU}** to the list`}`)
    .setColor(embedColor);
@@ -121,7 +120,7 @@ async function AddUser (client,message,IDU,user) {
         setTimeout(function(){
             message.delete();
             msg.delete();
-                  }, 4000);
+                  }, 4750);
      
    
 

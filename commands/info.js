@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { embedColor, discord, owner } = require('../config');
 const { version } = require('../package.json');
 const { noBotPerms } = require('../utils/errors');
@@ -8,7 +8,7 @@ exports.run = async (client, message, args) => {
     let perms = message.guild.me.permissions;
     if (!perms.has('EMBED_LINKS')) return noBotPerms(message, 'EMBED_LINKS');
 
-    const infoEmbed = new RichEmbed()
+    const infoEmbed = new MessageEmbed()
         .setTitle(client.user.username)
         .setDescription('This bot serves as a template for a Discord.js bot. Feel free to change anything you need!')
         .setColor(embedColor)

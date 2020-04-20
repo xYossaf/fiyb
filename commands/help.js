@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { owner, prefix, embedColor, discord } = require('../config');
 const { noBotPerms } = require('../utils/errors');
 
@@ -18,7 +18,7 @@ exports.run = async (client, message, args) => {
         if (!cmdObj) return;
         let cmdHelp = cmdObj.help;
 
-        let cmdHelpEmbed = new RichEmbed()
+        let cmdHelpEmbed = new MessageEmbed()
             .setTitle(`${cmdHelp.name} | Help Information`)
             .setDescription(cmdHelp.description)
             .addField('Usage', `\`${cmdHelp.usage}\``, true)
@@ -33,7 +33,7 @@ exports.run = async (client, message, args) => {
         return '`' + cmd + '`';
     });
 
-    const helpEmbed = new RichEmbed()
+    const helpEmbed = new MessageEmbed()
         .setTitle('Help Information')
         .setDescription(`View help information for ${client.user}. \n (Do \`${prefix + cmdName} <command>\` for specific help information).`)
         .addField('Current Prefix', prefix)

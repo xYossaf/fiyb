@@ -1,12 +1,7 @@
 const Regex = /((?:https?:\/\/)?(?:www\.)?(?:discord|paypal|selly)(?:\.me|app\.com|\.gg|\.io|\/invite)(?:\/\w*)?)/gmi;
 const Discord = require("discord.js");
 //const dateFormat = require('dateformat');
-const fs = require('fs');
-var ids;
-fs.readFile("./list.json", (err, data) => {
-  if (err) throw err;
-   ids = JSON.parse(data);
-});
+
 
 /*
 
@@ -42,17 +37,35 @@ fs.readFile("./list.json", (err, data) => {
     return channel.send(joinEmbed);
 */
   
-const { prefix } = require('../config');
+const { prefix,embedColor } = require('../config');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = async (client, member) => {
-  for (let i in ids.table.length) {
-    if (ids.table[i].ID !== member.user.id) {
-      member.user.send("ok");
-      member.kick().then(() => {}).catch(console.error);
+  var db = await client.appdata.get(member.guild.id);
+  console.log("11  " + member.id||member.user.id);
+    if(db.a == true) {
+  if(db[member.id||member.user.id].ID == member.id||member.user.id) {
+    console.log("12");
+    var rolea = member.guild.roles.cache.get(db.RoleID);
+   await member.roles.add(rolea);
+  }
+}
+  if(db.sud == true) {
+    if(member.guild.channels.cache.get(db.modchannelID)) {
+     let chhann = member.guild.channels.cache.get(db.modchannelID);
+     var welcomeemb = new MessageEmbed()
      
+     //    .setAuthor(`${client.username||client.user.username}`, client.user.displayAvatarURL(), 'https://google.com')
+     .setAuthor(`${member.username||member.user.username}`,member.user.displayAvatarURL())
+     .setTitle(`Join | ${member.tag || member.user.tag}`)
+     .setDescription(`${member.username || member.user.username} is waitting for your approval`)
+      .addField(`infractions?`, "none",true)
+     .addField(`ID`, member.id||member.user.id,true)
+     .setFooter("Powerd by Vorox","https://images-ext-1.discordapp.net/external/w8_15JUdS0163hN0loQvRx-l_2oY8hFUVKJ3240vLQI/https/cdn.discordapp.com/avatars/597184477403414559/d3e41f321af29194fe9f7efb88e80bea.webp");
+     chhann.send(welcomeemb);
+
     }
   }
-
     const cmdHelp = client.commands.get('help', 'help.name');
     
     client.user.setStatus('online');
